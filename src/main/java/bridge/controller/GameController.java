@@ -36,7 +36,7 @@ public class GameController {
         decideGameResult(copyBridge);
 
         outputView.printGameSuccessOrFailure(gameResult.isSuccess());
-        outputView.printResult(bridgeGame.getTryCount());
+        outputView.printTryCountResult(bridgeGame.getTryCount());
     }
 
     private void decideGameResult(List<String> copyBridge) {
@@ -79,7 +79,7 @@ public class GameController {
         if (!retry) {
             String compareResult = copyBridge.get(0);
             addGameResult(compareResult);
-            outputView.printFinalResult(gameResult);
+            outputView.printResult(gameResult);
             return null;
         }
         copyBridge = new ArrayList<>(bridge);
@@ -106,10 +106,10 @@ public class GameController {
         }
 
         if (copyBridge.size() == 0) {
-            outputView.printFinalResult(gameResult);
+            outputView.printResult(gameResult);
             return;
         }
-        outputView.printResult(gameResult);
+        outputView.printMap(gameResult);
     }
 
 
