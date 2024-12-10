@@ -22,9 +22,14 @@ public class GameController {
         outputView.printStartMessage();
         int bridgeLength = handleBridgeLength();
         List<String> bridge = gameService.generateBridge(bridgeLength);
-        for (String s : bridge) {
-            System.out.println(s);
-        }
+        String movingChoice = handleMovingBox();
+    }
+
+    private String handleMovingBox() {
+        inputView.printMoveMessage();
+        return retryOnInvalidInput(() -> {
+            return inputView.readMoving();
+        });
     }
 
     private int handleBridgeLength() {

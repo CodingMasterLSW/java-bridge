@@ -1,5 +1,6 @@
 package bridge.view;
 
+import static bridge.exception.ErrorMessage.INVALID_INPUT;
 import static bridge.exception.ErrorMessage.INVALID_NUMBER_RANGE;
 import static bridge.exception.ErrorMessage.NOT_BLANK_INPUT;
 import static bridge.exception.ErrorMessage.NOT_NUMBER;
@@ -13,6 +14,7 @@ import java.util.regex.Pattern;
 public class InputView {
 
     private static final String BRIDGE_LENGTH_MESSAGE = "다리의 길이를 입력해주세요.";
+    private static final String MOVE_MESSAGE = "이동할 칸을 선택해주세요. (위: U, 아래: D)";
     private static final String BLANK = "";
     private static final Pattern NUMBER = Pattern.compile("\\d+");
     private static final int MIN_BRIDGE_LENGTH = 3;
@@ -42,11 +44,24 @@ public class InputView {
         printMessage(BRIDGE_LENGTH_MESSAGE);
     }
 
+    public void printMoveMessage() {
+        printMessage(BLANK);
+        printMessage(MOVE_MESSAGE);
+    }
+
     /**
      * 사용자가 이동할 칸을 입력받는다.
      */
     public String readMoving() {
-        return null;
+        String userInput = userInput();
+        validateUserChoose(userInput, "U", "D");
+        return userInput;
+    }
+
+    private void validateUserChoose(String userInput, String firstCondition, String secondCondition) {
+        if (!userInput.equals(firstCondition) && !userInput.equals(secondCondition)) {
+            throw new IllegalArgumentException(INVALID_INPUT.getMessage());
+        }
     }
 
     /**
