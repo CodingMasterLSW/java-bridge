@@ -13,4 +13,5 @@ public class GameService {
         return bridgeMaker.makeBridge(size);
     }
 
+
 }

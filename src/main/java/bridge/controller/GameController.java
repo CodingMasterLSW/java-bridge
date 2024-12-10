@@ -1,5 +1,6 @@
 package bridge.controller;
 
+import bridge.domain.BridgeGame;
 import bridge.service.GameService;
 import bridge.view.InputView;
 import bridge.view.OutputView;
@@ -11,18 +12,26 @@ public class GameController {
     private final InputView inputView;
     private final OutputView outputView;
     private final GameService gameService;
+    private final BridgeGame bridgeGame;
 
-    public GameController(InputView inputView, OutputView outputView, GameService gameService) {
+    public GameController(InputView inputView, OutputView outputView, GameService gameService,
+            BridgeGame bridgeGame) {
         this.inputView = inputView;
         this.outputView = outputView;
         this.gameService = gameService;
+        this.bridgeGame = bridgeGame;
     }
 
     public void start() {
         outputView.printStartMessage();
         int bridgeLength = handleBridgeLength();
         List<String> bridge = gameService.generateBridge(bridgeLength);
+
         String movingChoice = handleMovingBox();
+        boolean canMove = bridgeGame.move(bridge, movingChoice);
+        if (!canMove) {
+            inputView.readGameCommand();
+        }
     }
 
     private String handleMovingBox() {
