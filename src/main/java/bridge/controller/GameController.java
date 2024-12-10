@@ -1,6 +1,7 @@
 package bridge.controller;
 
 import bridge.domain.BridgeGame;
+import bridge.domain.GameResult;
 import bridge.service.GameService;
 import bridge.view.InputView;
 import bridge.view.OutputView;
@@ -14,13 +15,15 @@ public class GameController {
     private final OutputView outputView;
     private final GameService gameService;
     private final BridgeGame bridgeGame;
+    private final GameResult gameResult;
 
     public GameController(InputView inputView, OutputView outputView, GameService gameService,
-            BridgeGame bridgeGame) {
+            BridgeGame bridgeGame, GameResult gameResult) {
         this.inputView = inputView;
         this.outputView = outputView;
         this.gameService = gameService;
         this.bridgeGame = bridgeGame;
+        this.gameResult = gameResult;
     }
 
     public void start() {
@@ -28,8 +31,6 @@ public class GameController {
         int bridgeLength = handleBridgeLength();
         List<String> bridge = gameService.generateBridge(bridgeLength);
         List<String> copyBridge = new ArrayList<>(bridge);
-        List<String> upGameResult = new ArrayList<>();
-        List<String> downGameResult = new ArrayList<>();
         boolean gameSuccess = false;
 
         while(copyBridge.size() != 0) {
@@ -38,17 +39,15 @@ public class GameController {
             if (canMove) {
                 String remove = copyBridge.remove(0);
                 if (remove.equals("U")) {
-                    upGameResult.add(" O ");
-                    downGameResult.add("   ");
+                    gameResult.addUpResult("O");
                 } else{
-                    downGameResult.add(" O ");
-                    upGameResult.add("   ");
+                    gameResult.addDownResult("O");
                 }
                 if (copyBridge.size() == 0) {
                     System.out.println("최종 게임 결과");
                 }
-                System.out.println("[" + String.join("|", upGameResult) + "]");
-                System.out.println("[" + String.join("|", downGameResult) + "]");
+                System.out.println("[" + gameResult.getUpResult()+"]");
+                System.out.println("[" + gameResult.getDownResult() +"]");
             }
 
             if (!canMove) {
@@ -57,20 +56,17 @@ public class GameController {
                 if (!retry) {
                     String compareResult = copyBridge.get(0);
                     if (compareResult.equals("U")) {
-                        upGameResult.add(" X ");
-                        downGameResult.add("   ");
+                        gameResult.addUpResult("X");
                     } else{
-                        downGameResult.add(" X ");
-                        upGameResult.add("   ");
+                        gameResult.addDownResult("X");
                     }
                     System.out.println("최종 게임 결과");
-                    System.out.println("[" + String.join("|", upGameResult) + "]");
-                    System.out.println("[" + String.join("|", downGameResult) + "]");
+                    System.out.println("[" + gameResult.getUpResult() + "]");
+                    System.out.println("[" + gameResult.getDownResult() + "]");
                     break;
                 } else {
                     copyBridge = new ArrayList<>(bridge);
-                    upGameResult = new ArrayList<>();
-                    downGameResult = new ArrayList<>();
+                    gameResult.resetGameResult();
                 }
             }
         }
