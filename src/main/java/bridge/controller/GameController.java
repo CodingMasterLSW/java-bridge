@@ -40,23 +40,34 @@ public class GameController {
     }
 
     private void decideGameResult(List<String> copyBridge) {
-        if(copyBridge.size() == 0) {
+        if (copyBridge == null) {
+            return;
+        }
+        if (copyBridge.size() == 0) {
             gameResult.gameClear();
         }
     }
 
     private List<String> handleGame(List<String> copyBridge, List<String> bridge) {
-        while(copyBridge.size() != 0) {
-            String movingChoice = handleMovingBox();
-            boolean canMove = bridgeGame.move(copyBridge, movingChoice);
-            if (canMove) {
-                handleCanMove(copyBridge);
+        while (copyBridge.size() != 0) {
+            copyBridge = handleAllMove(copyBridge, bridge);
+            if (copyBridge == null) {
+                break;
             }
-            if (!canMove) {
-                copyBridge = handleCannotMove(copyBridge, bridge);
-                if (copyBridge == null) {
-                    break;
-                }
+        }
+        return copyBridge;
+    }
+
+    private List<String> handleAllMove(List<String> copyBridge, List<String> bridge) {
+        String movingChoice = handleMovingBox();
+        boolean canMove = bridgeGame.move(copyBridge, movingChoice);
+        if (canMove) {
+            handleCanMove(copyBridge);
+        }
+        if (!canMove) {
+            copyBridge = handleCannotMove(copyBridge, bridge);
+            if (copyBridge == null) {
+                return null;
             }
         }
         return copyBridge;
@@ -67,27 +78,33 @@ public class GameController {
         boolean retry = bridgeGame.retry(userInput);
         if (!retry) {
             String compareResult = copyBridge.get(0);
-            if (compareResult.equals("U")) {
-                gameResult.addUpResult("X");
-            } else{
-                gameResult.addDownResult("X");
-            }
+            addGameResult(compareResult);
             outputView.printFinalResult(gameResult);
             return null;
-        } else {
-            copyBridge = new ArrayList<>(bridge);
-            gameResult.resetGameResult();
         }
+        copyBridge = new ArrayList<>(bridge);
+        gameResult.resetGameResult();
         return copyBridge;
+    }
+
+    private void addGameResult(String compareResult) {
+        if (compareResult.equals("U")) {
+            gameResult.addUpResult("X");
+        }
+        if (compareResult.equals("D")) {
+            gameResult.addDownResult("X");
+        }
     }
 
     private void handleCanMove(List<String> copyBridge) {
         String remove = copyBridge.remove(0);
         if (remove.equals("U")) {
             gameResult.addUpResult("O");
-        } else{
+        }
+        if (remove.equals("D")) {
             gameResult.addDownResult("O");
         }
+
         if (copyBridge.size() == 0) {
             outputView.printFinalResult(gameResult);
             return;
