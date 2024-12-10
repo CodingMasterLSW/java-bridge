@@ -3,6 +3,7 @@ package bridge.controller;
 import bridge.service.GameService;
 import bridge.view.InputView;
 import bridge.view.OutputView;
+import java.util.List;
 import java.util.function.Supplier;
 
 public class GameController {
@@ -20,6 +21,10 @@ public class GameController {
     public void start() {
         outputView.printStartMessage();
         int bridgeLength = handleBridgeLength();
+        List<String> bridge = gameService.generateBridge(bridgeLength);
+        for (String s : bridge) {
+            System.out.println(s);
+        }
     }
 
     private int handleBridgeLength() {
