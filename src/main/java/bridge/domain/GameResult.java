@@ -9,10 +9,12 @@ public class GameResult {
 
     private List<String> up;
     private List<String> down;
+    private boolean success;
 
     private GameResult() {
         this.up = new ArrayList<>();
         this.down = new ArrayList<>();
+        this.success = false;
     }
 
     public static GameResult create() {
@@ -40,5 +42,13 @@ public class GameResult {
     public void resetGameResult() {
         up.clear();
         down.clear();
+    }
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public void gameClear() {
+        this.success = true;
     }
 }

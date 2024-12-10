@@ -31,7 +31,6 @@ public class GameController {
         int bridgeLength = handleBridgeLength();
         List<String> bridge = gameService.generateBridge(bridgeLength);
         List<String> copyBridge = new ArrayList<>(bridge);
-        boolean gameSuccess = false;
 
         while(copyBridge.size() != 0) {
             String movingChoice = handleMovingBox();
@@ -44,10 +43,10 @@ public class GameController {
                     gameResult.addDownResult("O");
                 }
                 if (copyBridge.size() == 0) {
-                    System.out.println("최종 게임 결과");
+                    outputView.printFinalResult(gameResult);
+                    break;
                 }
-                System.out.println("[" + gameResult.getUpResult()+"]");
-                System.out.println("[" + gameResult.getDownResult() +"]");
+                outputView.printResult(gameResult);
             }
 
             if (!canMove) {
@@ -60,9 +59,7 @@ public class GameController {
                     } else{
                         gameResult.addDownResult("X");
                     }
-                    System.out.println("최종 게임 결과");
-                    System.out.println("[" + gameResult.getUpResult() + "]");
-                    System.out.println("[" + gameResult.getDownResult() + "]");
+                    outputView.printFinalResult(gameResult);
                     break;
                 } else {
                     copyBridge = new ArrayList<>(bridge);
@@ -71,15 +68,11 @@ public class GameController {
             }
         }
         if(copyBridge.size() == 0) {
-            gameSuccess = true;
+            gameResult.gameClear();
         }
 
-        if(gameSuccess) {
-            System.out.println("게임 성공 여부: 성공");
-        } else {
-            System.out.println("게임 성공 여부: 실패");
-        }
-        System.out.println("총 시도한 횟수: " + bridgeGame.getTryCount());
+        outputView.printGameSuccessOrFailure(gameResult.isSuccess());
+        outputView.printResult(bridgeGame.getTryCount());
     }
 
     private String handleMovingBox() {
