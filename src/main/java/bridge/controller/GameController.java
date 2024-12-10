@@ -3,6 +3,7 @@ package bridge.controller;
 import bridge.service.GameService;
 import bridge.view.InputView;
 import bridge.view.OutputView;
+import java.util.function.Supplier;
 
 public class GameController {
 
@@ -18,7 +19,23 @@ public class GameController {
 
     public void start() {
         outputView.printStartMessage();
-        inputView.printBridgeLengthMessage();
-        inputView.readBridgeSize();
+        int bridgeLength = handleBridgeLength();
+    }
+
+    private int handleBridgeLength() {
+        return retryOnInvalidInput(() -> {
+            inputView.printBridgeLengthMessage();
+            return inputView.readBridgeSize();
+        });
+    }
+
+    private <T> T retryOnInvalidInput(Supplier<T> input) {
+        while (true) {
+            try {
+                return input.get();
+            } catch (IllegalArgumentException e) {
+                outputView.printMessage(e.getMessage());
+            }
+        }
     }
 }
