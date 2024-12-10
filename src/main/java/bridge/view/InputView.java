@@ -1,9 +1,23 @@
 package bridge.view;
 
+import static bridge.exception.ErrorMessage.INVALID_NUMBER_RANGE;
+import static bridge.exception.ErrorMessage.NOT_BLANK_INPUT;
+import static bridge.exception.ErrorMessage.NOT_NUMBER;
+
+import camp.nextstep.edu.missionutils.Console;
+import java.util.regex.Pattern;
+
 /**
  * 사용자로부터 입력을 받는 역할을 한다.
  */
 public class InputView {
+
+    private static final String BRIDGE_LENGTH_MESSAGE = "다리의 길이를 입력해주세요.";
+    private static final String BLANK = "";
+    private static final Pattern NUMBER = Pattern.compile("\\d+");
+    private static final int MIN_BRIDGE_LENGTH = 3;
+    private static final int MAX_BRIDGE_LENGTH = 20;
+
 
     private InputView() {
     }
@@ -16,7 +30,16 @@ public class InputView {
      * 다리의 길이를 입력받는다.
      */
     public int readBridgeSize() {
-        return 0;
+        String userInput = userInput();
+        validateInput(userInput);
+        validateNumber(userInput);
+        validateNumberRange(userInput);
+        return Integer.parseInt(userInput);
+    }
+
+    public void printBridgeLengthMessage() {
+        printMessage(BLANK);
+        printMessage(BRIDGE_LENGTH_MESSAGE);
     }
 
     /**
@@ -31,5 +54,34 @@ public class InputView {
      */
     public String readGameCommand() {
         return null;
+    }
+
+    public void printMessage(String message) {
+        System.out.println(message);
+    }
+
+    private String userInput() {
+        String userInput = Console.readLine();
+        validateInput(userInput);
+        return userInput;
+    }
+
+    private void validateInput(String userInput) {
+        if (userInput.isBlank() || userInput == null) {
+            throw new IllegalArgumentException(NOT_BLANK_INPUT.getMessage());
+        }
+    }
+
+    private void validateNumber(String userInput) {
+        if (!NUMBER.matcher(userInput).matches()) {
+            throw new IllegalArgumentException(NOT_NUMBER.getMessage());
+        }
+    }
+
+    private void validateNumberRange(String userInput) {
+        int bridgeLength = Integer.parseInt(userInput);
+        if (bridgeLength<MIN_BRIDGE_LENGTH || bridgeLength>MAX_BRIDGE_LENGTH) {
+            throw new IllegalArgumentException(INVALID_NUMBER_RANGE.getMessage());
+        }
     }
 }

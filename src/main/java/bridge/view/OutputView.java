@@ -5,11 +5,21 @@ package bridge.view;
  */
 public class OutputView {
 
+    private static final String GAME_START_MESSAGE = "다리 건너기 게임을 시작합니다.";
+
     private OutputView() {
     }
 
     public static OutputView create() {
         return new OutputView();
+    }
+
+    public void printMessage(String message) {
+        System.out.println(message);
+    }
+
+    public void printStartMessage() {
+        printMessage(GAME_START_MESSAGE);
     }
 
     /**

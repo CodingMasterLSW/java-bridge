@@ -5,6 +5,7 @@ import bridge.view.InputView;
 import bridge.view.OutputView;
 
 public class GameController {
+
     private final InputView inputView;
     private final OutputView outputView;
     private final GameService gameService;
@@ -16,5 +17,8 @@ public class GameController {
     }
 
     public void start() {
+        outputView.printStartMessage();
+        inputView.printBridgeLengthMessage();
+        inputView.readBridgeSize();
     }
 }
